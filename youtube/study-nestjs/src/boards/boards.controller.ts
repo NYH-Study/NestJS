@@ -1,5 +1,13 @@
-import { Body, Controller, Get, Post, Param } from '@nestjs/common';
-import { Board } from './board.model';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Param,
+  Delete,
+  Patch,
+} from '@nestjs/common';
+import { Board, BoardStatus } from './board.model';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 
@@ -27,5 +35,17 @@ export class BoardsController {
     // 모든 Param를 갖져오려면 @Param(): params: string[] 으로 하면 됨!
     return this.boardService.getBoardById(id);
   }
+
+  @Delete('/:id')
+  deleteBoard(@Param('id') id: string): void {
+    this.boardService.deleteBoard(id);
+  }
+
+  @Patch('/:id/status')
+  updateBoardStatus(
+    @Param('id') id: string,
+    @Body('status') status: BoardStatus,
+  ) {
+    return this.boardService.updateBoardStatus(id, status);
+  }
 }
-test;
