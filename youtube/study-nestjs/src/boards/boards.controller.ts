@@ -6,10 +6,13 @@ import {
   Param,
   Delete,
   Patch,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Board, BoardStatus } from './board.model';
 import { BoardsService } from './boards.service';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 
 @Controller('boards')
 export class BoardsController {
@@ -23,6 +26,7 @@ export class BoardsController {
   @Post()
   // 클라이언트에서 보낸 값들을 핸들러에서 가져오는 방법 : @Body body
   // express에서는 'req.body' 사용
+  @UsePipes(ValidationPipe) // 유효성 검사 pipe
   createBoard(
     @Body()
     createBoardDto: CreateBoardDto,
@@ -44,7 +48,7 @@ export class BoardsController {
   @Patch('/:id/status')
   updateBoardStatus(
     @Param('id') id: string,
-    @Body('status') status: BoardStatus,
+    @Body('status', BoardStatusValidationPipe) status: BoardStatus,
   ) {
     return this.boardService.updateBoardStatus(id, status);
   }
